@@ -1,10 +1,14 @@
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from fastapi import FastAPI, HTTPException, status, Depends
 from sqlalchemy.orm import Session
 import logging
 from typing import List, Optional
 
-from backend.schemas import TrafficPayload, TrafficResponse, PredictionResponse
-import core.models as models
+from schemas import TrafficPayload, TrafficResponse, PredictionResponse
+from core import models
 from predictor.predictor import predict
 from core.database import engine, SessionLocal
 
