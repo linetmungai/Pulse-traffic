@@ -3,6 +3,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from fastapi import FastAPI, HTTPException, status, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import logging
 from typing import List, Optional
@@ -11,6 +12,7 @@ from schemas import TrafficPayload, TrafficResponse, PredictionResponse
 from core import models
 from predictor.predictor import predict
 from core.database import engine, SessionLocal
+# from routers import traffic, prediction
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -26,6 +28,21 @@ app = FastAPI(
     #     {"name": "ingestion", "description": "Endpoints for ingesting traffic data"}
     # ]
 )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# # ... your router includes remain below this
+# app.include_router(traffic.router)
+# app.include_router(prediction.router)
 
 # Dependency to get the database session for each request
 def get_db():
