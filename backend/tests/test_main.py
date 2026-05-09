@@ -1,6 +1,7 @@
 import sys
 import os
 from pathlib import Path
+from unittest.mock import patch
 
 # QA SETUP: Force Python to look in the parent backend directory for imports
 backend_dir = str(Path(__file__).resolve().parent.parent)
@@ -103,7 +104,34 @@ def test_prediction_endpoint_not_enough_data():
     assert response.status_code == 404
     assert "no data" in response.text.lower()
 
-@pytest.mark.skip(reason="Pending ML Model (.pkl) integration.")
-def test_prediction_endpoint_high_congestion_logic():
-    """Test the threshold logic once the ML model is provided."""
-    pass
+@patch("main.predict")
+def test_prediction_endpoint_high_congestion_logic(mock_predict):
+    """QA Check: Use Mocking to test the API independently of the ML artifact."""
+    
+    # 1. We must first insert 'terrible traffic' into the test database
+    test_node = "ST-JAM-TEST-001"
+    bad_traffic_payload = {
+        "node_id": test_node,
+        "timestamp": "2026-05-09T20:00:00Z",
+        "vehicle_count": 132,
+        "speed": 12.5,
+        "density": 0.88 
+    }
+    
+    # Send the bad data to the DB
+    insert_response = client.post("/traffic-data", json=bad_traffic_payload)
+    assert insert_response.status_code == 201
+
+    # 2. THE FIX: Hijack the predict function. 
+    # Force it to return a Jammed status without needing the .pkl file!
+    mock_predict.return_value = {"status": "Jammed", "confidence": 0.99}
+
+    # 3. Now hit the endpoint
+    response = client.post(f"/predict/{test_node}")
+
+    # 4. Assert the request was successful
+    assert response.status_code == 200
+
+    # 5. Verify our mocked API successfully returned 'Jammed'
+    data = response.json()
+    assert "Jammed" in str(data)
