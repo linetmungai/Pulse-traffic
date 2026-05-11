@@ -4,9 +4,10 @@ import { useLiveNetwork } from '@/hooks/useTrafficData';
 import { usePrediction } from '@/hooks/usePrediction';
 import { StatCard } from '@/components/StatCard';
 import { PredictionPanel } from '@/components/PredictionPanel';
-import { Car, Activity, Map as MapIcon, Navigation, WifiOff } from 'lucide-react';
+import { Car, Activity, Map as MapIcon, Navigation, WifiOff, ArrowLeft } from 'lucide-react';
 import MapWrapper from '@/components/Map/MapWrapper';
 import { DashboardCharts } from '@/components/Charts/DashboardCharts';
+import Link from 'next/link';
 
 // Default destination when a node is clicked (can be changed in the panel)
 const DEFAULT_DESTINATION = 'ST-EXP-005'; // Mlolongo Toll Station
@@ -58,12 +59,13 @@ export default function Dashboard() {
           <div>
             <h3 className="font-semibold text-sm">Telemetry Feed Offline</h3>
             <p className="text-xs opacity-80 mt-0.5">
-              Connection to the Uvicorn backend lost. Displaying last known data. Attempting to reconnect...
+              Connection lost. Displaying last known data. Attempting to reconnect...
             </p>
           </div>
         </div>
       )}
 
+<<<<<<< HEAD
       {/* Header */}
       <header className="flex justify-between items-end mb-8">
         <div>
@@ -77,6 +79,31 @@ export default function Dashboard() {
             <span className={`w-2 h-2 rounded-full ${isError ? 'bg-pulse-red' : 'bg-pulse-green animate-pulse'}`}></span>
             {isError ? 'Offline' : 'Live'}
           </span>
+=======
+      {/* Header Section */}
+      <header className="mb-8">
+        <Link 
+          href="/" 
+          className="group inline-flex items-center gap-2 px-3 py-1.5 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-pulse-cyan/50 rounded-full text-slate-400 hover:text-pulse-cyan text-xs font-medium transition-all mb-6 shadow-sm"
+        >
+          <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
+          Return to Home
+        </Link>
+        <div className='flex justify-between items-end'>
+          <div>
+            <h1 className="text-2xl font-semibold mb-1">Nairobi Network • Live</h1>
+            <p className="text-slate-400 text-sm">15 monitored junctions across 4 major corridors.</p>
+          </div>
+          <div className="flex items-center gap-4 text-sm">
+            {/* Dynamically change the "Live" badge if offline */}
+            <span className={`flex items-center gap-2 bg-slate-800 border px-3 py-1 rounded-full ${
+              isError ? 'border-pulse-red/30 text-pulse-red' : 'border-pulse-green/30 text-pulse-green'
+            }`}>
+              <span className={`w-2 h-2 rounded-full ${isError ? 'bg-pulse-red' : 'bg-pulse-green animate-pulse'}`}></span> 
+              {isError ? 'Offline' : 'Live'}
+            </span>
+          </div>
+>>>>>>> ea596f5af1d222dba806bea63651b6e97cff5f6e
         </div>
       </header>
 
@@ -88,10 +115,17 @@ export default function Dashboard() {
         <StatCard title="Hotspots"         value={hotspots}                        subtitle={`${(networkData?.length || 0) - hotspots} clear`} Icon={MapIcon} statusColor={hotspots > 0 ? 'red' : 'green'} />
       </div>
 
+<<<<<<< HEAD
       {/* Map & Sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px]">
 
         {/* Map */}
+=======
+      {/* Map & List Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-150">
+        
+        {/* Left: GIS Map */}
+>>>>>>> ea596f5af1d222dba806bea63651b6e97cff5f6e
         <div className="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-xl overflow-hidden relative">
           <div className="absolute top-4 left-4 z-10 flex gap-2">
             <span className="bg-slate-900/80 px-3 py-1 rounded-full border border-pulse-green text-pulse-green text-xs font-bold flex items-center gap-2">
@@ -109,8 +143,13 @@ export default function Dashboard() {
           </div>
         </div>
 
+<<<<<<< HEAD
         {/* Traffic Nodes Sidebar */}
         <div className="bg-slate-800 border border-slate-700 rounded-xl flex flex-col overflow-hidden h-[600px]">
+=======
+        {/* Right: Traffic Nodes List */}
+        <div className="bg-slate-800 border border-slate-700 rounded-xl flex flex-col overflow-hidden h-150">
+>>>>>>> ea596f5af1d222dba806bea63651b6e97cff5f6e
           <div className="p-5 border-b border-slate-700 bg-slate-900/50">
             <h2 className="text-white font-semibold text-lg">Traffic Nodes</h2>
             <p className="text-slate-400 text-xs mt-1">
